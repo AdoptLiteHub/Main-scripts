@@ -3,14 +3,14 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Ahmad
 
 --Script Window
 local Window = V5.CreateWindow({
-    Name = "Complete Window", 
+    Name = "Lite Hub - Speed Hub X Library", 
     Visible = false
 })
 
 --Minimize Whole Gui Button
 local MinimizeButton = V5.CreateButton({
     Parent = Window,
-    Image = "rbxassetid://YOUR_IMAGE_ID",  
+    Image = "rbxassetid://86093303748141",  
     Size = UDim2.new(0, 30, 0, 30),
     Callback = function()
         Window.Visible = false
@@ -20,13 +20,13 @@ local MinimizeButton = V5.CreateButton({
 --tab creation 
 local Tab = V5.CreateTab({
     Parent = Window,
-    Name = "My Tab", 
+    Name = "Test Tab", 
     Content = function()
 
     --Label
         local SectionLabel = V5.CreateLabel({
             Parent = Tab,
-            Text = "Section 1: Introduction",
+            Text = "--your text here",
             Size = UDim2.new(0, 300, 0, 30),
             TextSize = 18,
             TextBold = true
@@ -35,7 +35,7 @@ local Tab = V5.CreateTab({
 --Paragraph
         local Paragraph = V5.CreateLabel({
             Parent = Tab,
-            Text = "This is the first section where you can explain your topic or introduce the content.",
+            Text = "This is the first paragraph where you can explain your topic or introduce the content.",
             Size = UDim2.new(0, 300, 0, 100),
             TextSize = 14,
             TextWrapped = true
