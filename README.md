@@ -1,87 +1,45 @@
---Head Of Script
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/refs/heads/main/Library/V5.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/main/Library/V3.lua"))()
 
---Script Window
-local Window = V5.CreateWindow({
-    Name = "Lite Hub - Speed Hub X Library", 
-    Visible = false
+local Window = Library:MakeWindow({
+    Title = "Lite Hub testing " .. Version,
+    SaveFolder = ""
+});Window:AddMinimizeButton({
+    Button = {Image = "rbxassetid://86093303748141"},
+    Corner = {CornerRadius = UDim.new(0, 5)}
 })
 
---Minimize Whole Gui Button
-local MinimizeButton = V5.CreateButton({
-    Parent = Window,
-    Image = "rbxassetid://86093303748141",  
-    Size = UDim2.new(0, 30, 0, 30),
-    Callback = function()
-        Window.Visible = false
-    end
-})
+local Home = Window:MakeTab({"Home", "scan-face"})
 
---tab creation 
-local Tab = V5.CreateTab({
-    Parent = Window,
-    Name = "Test Tab", 
-    Content = function()
+local function Toggle(Tab, Name, Desc, Default)
+  local Ver = Tab:AddToggle({
+    Name = Name,Description = Desc or "",Default = Default,
+    Callback = function(Value)
+      SpeedHubX[Name] = Value
+    end})
+    return Ver
+end
+local function Dropdown(Tab, Name, Desc, Option, Default)
+  local Ver = Tab:AddDropdown({
+    Name = Name,Description = Desc or "",Options = Option,Default = Default,
+    Callback = function(Value)
+      SpeedHubX[Name] = Value
+    end})
+    return Ver
+end
+local function Silder(Tab, Name, Min, Max, Default)
+  local Ver = Tab:AddSlider({
+    Name = Name,Min = Min,Max = Max,Default = Default,
+    Callback = function(Value)
+      SpeedHubX[Name] = Value
+    end})
+    return Ver
+end
 
-    --Label
-        local SectionLabel = V5.CreateLabel({
-            Parent = Tab,
-            Text = "--your text here",
-            Size = UDim2.new(0, 300, 0, 30),
-            TextSize = 18,
-            TextBold = true
-        })
-        
---Paragraph
-        local Paragraph = V5.CreateLabel({
-            Parent = Tab,
-            Text = "This is the first paragraph where you can explain your topic or introduce the content.",
-            Size = UDim2.new(0, 300, 0, 100),
-            TextSize = 14,
-            TextWrapped = true
-        })
+Home:AddSection({"Local Player"})
+Silder(Home, "Set WalkSpeed", 0, 100000, 1000)
+Silder(Home, "Set JumpPower", 0, 100000, 1000)
+Toggle(Home, "Enable WalkSpeed", "This Can Set Walk Speed!", false)
+Toggle(Home, "Enable JumpPower", "This Can Set JumpPower!", false)
+Toggle(Home, "No Clip", "", false)
+Toggle(Home, "Infinits Jump Ping", "", false)
 
---Button
-        local Button = V5.CreateButton({
-            Parent = Tab,
-            Text = "Click Me",
-            Size = UDim2.new(0, 200, 0, 40),
-            Callback = function()
-                print("Button clicked!")
-            end
-        })
-
---Toggle
-        local Toggle = V5.CreateToggle({
-            Parent = Tab,
-            Text = "Enable Feature",
-            Size = UDim2.new(0, 200, 0, 40),
-            Callback = function(state)
-                print("Toggle state: " .. tostring(state))
-            end
-        })
-
---Slider
-        local Slider = V5.CreateSlider({
-            Parent = Tab,
-            Text = "Adjust Value",
-            Min = 0,
-            Max = 100,
-            Size = UDim2.new(0, 200, 0, 40),
-            Callback = function(value)
-                print("Slider value: " .. value)
-            end
-        })
-
---Dropdown
-        local Dropdown = V5.CreateDropdown({
-            Parent = Tab,
-            Text = "Select Option",
-            Options = {"Option 1", "Option 2", "Option 3"},
-            Size = UDim2.new(0, 200, 0, 40),
-            Callback = function(selectedOption)
-                print("Dropdown selected: " .. selectedOption)
-            end
-        })
-    end
-})
