@@ -3,24 +3,53 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memej
 local player = game.Players.LocalPlayer
 
 -- Create the UI window
-local Window = library:CreateWindow("Lite Hub") 
+local Window = library:CreateWindow("Lite Hub")
 
 -- Create a tab called 'Killing'
-Window:CreateTab("Killing")
+local KillingTab = Window:CreateTab("Killing")
+
+-- Variable to hold the current target
+local currentTarget = nil
+local AutoKillToggle = nil
+local KillTargetToggle = nil
+
+-- Create a label for Punching
+KillingTab:CreateLabel("Punching")
 
 -- Auto Kill Toggle
-KillingTab:CreateToggle({
+AutoKillToggle = KillingTab:CreateToggle({
     Name = "Auto Kill",
     Callback = function(state)
         if state then
-            -- Start auto killing (punching without animation)
+            -- Start auto killing (create invisible hitboxes for each player, except yourself)
             while AutoKillToggle:GetState() do
-                -- Equip the 'Punch' tool
-                local punchTool = player.Backpack:FindFirstChild("Punch")
-                if punchTool then
-                    punchTool.Parent = player.Character
-                    player.Character:FindFirstChild("RightHand").CFrame = player.Character:FindFirstChild("RightHand").CFrame
-                    player.Character:FindFirstChild("LeftHand").CFrame = player.Character:FindFirstChild("LeftHand").CFrame
+                for _, targetPlayer in pairs(game.Players:GetPlayers()) do
+                    if targetPlayer ~= player then
+                        -- Create a hitbox at the target player's HumanoidRootPart
+                        local humanoidRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                        if humanoidRootPart then
+                            local hitbox = Instance.new("Part")
+                            hitbox.Size = Vector3.new(2, 2, 2)
+                            hitbox.Position = humanoidRootPart.Position
+                            hitbox.Anchored = true
+                            hitbox.CanCollide = false
+                            hitbox.Transparency = 1 -- Invisible hitbox
+                            hitbox.Parent = game.Workspace
+
+                            -- Attach the hitbox to the player's right and left hand
+                            local rightHand = player.Character:FindFirstChild("RightHand")
+                            local leftHand = player.Character:FindFirstChild("LeftHand")
+                            if rightHand and leftHand then
+                                hitbox.CFrame = CFrame.new(rightHand.Position) -- Position at right hand
+                                wait(0.1) -- Adjust for desired speed
+                                hitbox.CFrame = CFrame.new(leftHand.Position) -- Position at left hand
+                                wait(0.1)
+                            end
+
+                            -- Cleanup after using the hitbox
+                            hitbox:Destroy()
+                        end
+                    end
                 end
                 wait(0.1) -- Adjust for desired speed
             end
@@ -53,18 +82,35 @@ game.Players.PlayerRemoving:Connect(function(removedPlayer)
 end)
 
 -- Create 'Kill Target' Toggle
-KillingTab:CreateToggle({
+KillTargetToggle = KillingTab:CreateToggle({
     Name = "Kill Target",
     Callback = function(state)
         if state then
             -- Start killing the selected target
             while KillTargetToggle:GetState() and currentTarget do
-                -- Equip the 'Punch' tool again
-                local punchTool = player.Backpack:FindFirstChild("Punch")
-                if punchTool then
-                    punchTool.Parent = player.Character
-                    player.Character:FindFirstChild("RightHand").CFrame = currentTarget.Character.HumanoidRootPart.CFrame
-                    player.Character:FindFirstChild("LeftHand").CFrame = currentTarget.Character.HumanoidRootPart.CFrame
+                local humanoidRootPart = currentTarget.Character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    -- Create a hitbox at the selected target's HumanoidRootPart
+                    local hitbox = Instance.new("Part")
+                    hitbox.Size = Vector3.new(2, 2, 2)
+                    hitbox.Position = humanoidRootPart.Position
+                    hitbox.Anchored = true
+                    hitbox.CanCollide = false
+                    hitbox.Transparency = 1 -- Invisible hitbox
+                    hitbox.Parent = game.Workspace
+
+                    -- Attach the hitbox to the player's right and left hand
+                    local rightHand = player.Character:FindFirstChild("RightHand")
+                    local leftHand = player.Character:FindFirstChild("LeftHand")
+                    if rightHand and leftHand then
+                        hitbox.CFrame = CFrame.new(rightHand.Position) -- Position at right hand
+                        wait(0.1) -- Adjust for desired speed
+                        hitbox.CFrame = CFrame.new(leftHand.Position) -- Position at left hand
+                        wait(0.1)
+                    end
+
+                    -- Cleanup after using the hitbox
+                    hitbox:Destroy()
                 end
                 wait(0.1) -- Adjust for desired speed
             end
@@ -72,7 +118,7 @@ KillingTab:CreateToggle({
     end
 })
 
--- Create a 'Spy' Toggle
+-- Create 'Spy' Toggle
 KillingTab:CreateToggle({
     Name = "Spy",
     Callback = function(state)
@@ -91,6 +137,31 @@ KillingTab:CreateToggle({
     end
 })
 
+-- Auto Punch Toggle
+KillingTab:CreateToggle({
+    Name = "Auto Punch",
+    Callback = function(state)
+        if state then
+            -- Keep equipping and using the 'Punch' tool infinitely
+            while true do
+                local punchTool = player.Backpack:FindFirstChild("Punch")
+                if punchTool then
+                    -- Equip the 'Punch' tool
+                    punchTool.Parent = player.Character
+
+                    -- Use the punch tool infinitely
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:EquipTool(punchTool)
+                        humanoid:UseTool(punchTool)
+                    end
+                end
+                wait(0.1) -- Adjust for desired speed
+            end
+        end
+    end
+})
+
 -- Keep the dropdown updated with the list of players
 PlayerDropdown:SetOptions(function()
     local players = {}
@@ -100,5 +171,3 @@ PlayerDropdown:SetOptions(function()
     return players
 end)
 
--- The above code should work under the assumption that the "Punch" tool exists
--- and players' characters are appropriately structured with the humanoidrootpart.
