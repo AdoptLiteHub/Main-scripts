@@ -10,7 +10,7 @@ local window = library:AddWindow("Lite Hub test", {
 })
 
 -- Create a tab called 'Killing'
-local KillingTab = Window:CreateTab("Killing")
+window:AddTab("Killing") 
 
 -- Variable to hold the current target
 local currentTarget = nil
