@@ -6,10 +6,10 @@ local player = game.Players.LocalPlayer
 local Window = library:CreateWindow("Lite Hub") 
 
 -- Create a tab called 'Killing'
-local KillingTab = Window:CreateTab("Killing")
+Window:CreateTab("Killing")
 
 -- Auto Kill Toggle
-local AutoKillToggle = KillingTab:CreateToggle({
+KillingTab:CreateToggle({
     Name = "Auto Kill",
     Callback = function(state)
         if state then
@@ -53,7 +53,7 @@ game.Players.PlayerRemoving:Connect(function(removedPlayer)
 end)
 
 -- Create 'Kill Target' Toggle
-local KillTargetToggle = KillingTab:CreateToggle({
+KillingTab:CreateToggle({
     Name = "Kill Target",
     Callback = function(state)
         if state then
@@ -73,7 +73,7 @@ local KillTargetToggle = KillingTab:CreateToggle({
 })
 
 -- Create a 'Spy' Toggle
-local SpyToggle = KillingTab:CreateToggle({
+KillingTab:CreateToggle({
     Name = "Spy",
     Callback = function(state)
         if state then
