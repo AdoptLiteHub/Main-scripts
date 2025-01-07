@@ -5,12 +5,26 @@ local mouse = player:GetMouse()
 
 -- Function to find the tool called "Punch" (for Auto Punch)
 local function findPunchTool()
+    -- Check for the "Punch" tool in the player's backpack
     for _, tool in pairs(player.Backpack:GetChildren()) do
         if tool.Name == "Punch" then
             return tool
         end
     end
     return nil
+end
+
+-- Function to equip the "Punch" tool and use it
+local function equipAndUsePunch()
+    local punchTool = findPunchTool()
+    if punchTool then
+        -- Equip the "Punch" tool
+        player.Character.Humanoid:EquipTool(punchTool)
+        
+        -- Simulate the use of the tool (punching)
+        -- The "Activated" event is triggered when the tool is used.
+        punchTool.Activated:Fire()
+    end
 end
 
 -- Create the UI window
@@ -25,26 +39,25 @@ local Killing = window:AddTab("Killing")
 
 -- Auto Kill Toggle
 Killing:AddSwitch("Auto Kill", function(bool)
+    local hitboxes = {}  -- Table to store hitboxes
     while bool do
-        -- Loop through all players and set their humanoidrootpart's position to your hands
+        -- Loop through all players and create an invisible hitbox near their HumanoidRootPart
         for _, targetPlayer in pairs(game.Players:GetPlayers()) do
-            if targetPlayer ~= player then
-                local targetHRP = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if targetPlayer ~= player and targetPlayer.Character then
+                local targetHRP = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
                 if targetHRP then
-                    -- Set position to your right hand and left hand alternatively
-                    local rightHand = player.Character and player.Character:FindFirstChild("RightHand")
-                    local leftHand = player.Character and player.Character:FindFirstChild("LeftHand")
-                    if rightHand and leftHand then
-                        -- Toggle between right and left hand positions
-                        targetHRP.CFrame = rightHand.CFrame
-                        wait(0.5)
-                        targetHRP.CFrame = leftHand.CFrame
-                        wait(0.5)
-                    end
+                    -- Create the invisible hitbox
+                    local hitbox = createInvisibleHitbox(targetPlayer.Character)
+                    table.insert(hitboxes, hitbox)  -- Store the hitbox to clean it up later
                 end
             end
         end
         wait(1)
+    end
+
+    -- Cleanup hitboxes when the toggle is turned off
+    for _, hitbox in pairs(hitboxes) do
+        hitbox:Destroy()
     end
 end)
 
@@ -64,24 +77,23 @@ end
 -- Auto Kill Target Toggle
 Killing:AddSwitch("Auto Kill Target", function(bool)
     local targetPlayerName = dropdown:GetSelected() -- Get selected player
+    local hitboxes = {}  -- Table to store hitboxes
     while bool do
         local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
         if targetPlayer and targetPlayer.Character then
             local targetHRP = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
             if targetHRP then
-                -- Set position to your right hand and left hand alternatively
-                local rightHand = player.Character and player.Character:FindFirstChild("RightHand")
-                local leftHand = player.Character and player.Character:FindFirstChild("LeftHand")
-                if rightHand and leftHand then
-                    -- Toggle between right and left hand positions
-                    targetHRP.CFrame = rightHand.CFrame
-                    wait(0.5)
-                    targetHRP.CFrame = leftHand.CFrame
-                    wait(0.5)
-                end
+                -- Create the invisible hitbox for the selected player
+                local hitbox = createInvisibleHitbox(targetPlayer.Character)
+                table.insert(hitboxes, hitbox)  -- Store the hitbox to clean it up later
             end
         end
         wait(1)
+    end
+
+    -- Cleanup hitboxes when the toggle is turned off
+    for _, hitbox in pairs(hitboxes) do
+        hitbox:Destroy()
     end
 end)
 
@@ -104,12 +116,7 @@ Killing:AddLabel("Punching")
 -- Auto Punch Toggle
 Killing:AddSwitch("Auto Punch", function(bool)
     while bool do
-        local punchTool = findPunchTool()
-        if punchTool then
-            -- Equip and use the punch tool
-            player.Character.Humanoid:EquipTool(punchTool)
-            punchTool.Activated:Fire()
-        end
-        wait(0.1)
+        equipAndUsePunch()  -- Equip and use the "Punch" tool
+        wait(0.1)  -- Wait before triggering again
     end
 end)
