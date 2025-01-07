@@ -5,7 +5,7 @@ local player = game.Players.LocalPlayer
 -- Create the UI window
 local window = library:AddWindow("Lite Hub test", {
 	main_color = Color3.fromRGB(41, 74, 122), -- Color
-	min_size = Vector2.new(250, 346), -- Size of the gui
+	min_size = Vector2.new(400, 450), -- Size of the gui
 	can_resize = false, -- true or false
 })
 
