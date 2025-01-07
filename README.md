@@ -18,10 +18,10 @@ local AutoKillToggle = nil
 local KillTargetToggle = nil
 
 -- Create a label for Punching
-KillingTab:CreateLabel("Punching")
+KillingTab:AddLabel("Hello World!")
 
 -- Auto Kill Toggle
-AutoKillToggle = KillingTab:CreateToggle({
+AutoKillToggle = KillingTab:AddSwitch({
     Name = "Auto Kill",
     Callback = function(state)
         if state then
@@ -62,8 +62,8 @@ AutoKillToggle = KillingTab:CreateToggle({
 })
 
 -- Create a label and dropdown for players
-KillingTab:CreateLabel("Target")
-local PlayerDropdown = KillingTab:CreateDropdown({
+KillingTab:AddLabel("Target")
+local PlayerDropdown = KillingTab:AddDropdown({
     Name = "Player Dropdown",
     Options = {},
     Callback = function(selectedPlayerName)
@@ -86,7 +86,7 @@ game.Players.PlayerRemoving:Connect(function(removedPlayer)
 end)
 
 -- Create 'Kill Target' Toggle
-KillTargetToggle = KillingTab:CreateToggle({
+KillTargetToggle = KillingTab:AddSwitch({
     Name = "Kill Target",
     Callback = function(state)
         if state then
@@ -123,7 +123,7 @@ KillTargetToggle = KillingTab:CreateToggle({
 })
 
 -- Create 'Spy' Toggle
-KillingTab:CreateToggle({
+KillingTab:AddSwitch({
     Name = "Spy",
     Callback = function(state)
         if state then
@@ -142,7 +142,7 @@ KillingTab:CreateToggle({
 })
 
 -- Auto Punch Toggle
-KillingTab:CreateToggle({
+KillingTab:AddSwitch({
     Name = "Auto Punch",
     Callback = function(state)
         if state then
