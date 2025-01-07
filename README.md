@@ -3,7 +3,11 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memej
 local player = game.Players.LocalPlayer
 
 -- Create the UI window
-local Window = library:CreateWindow("Lite Hub")
+local window = library:AddWindow("Lite Hub test", {
+	main_color = Color3.fromRGB(41, 74, 122), -- Color
+	min_size = Vector2.new(250, 346), -- Size of the gui
+	can_resize = false, -- true or false
+})
 
 -- Create a tab called 'Killing'
 local KillingTab = Window:CreateTab("Killing")
