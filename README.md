@@ -324,3 +324,66 @@ Tabs.Farming:CreateToggle("Auto Orb", {
         end
     end
 })
+
+-- Add Rebirth Tab
+local RebirthTab = Window:CreateTab{
+    Title = "Rebirth",
+    Icon = "" -- Icon is now empty
+}
+
+-- Rebirth Values
+getgenv().autoRebirth = false
+getgenv().rebirthStoppingPoint = 0
+getgenv().rebirthUntilReachAmount = false
+
+-- Functions
+function autoRebirth()
+    while _G.autoRebirth do
+        local args = {
+            [1] = "rebirthRequest"
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("rebirthEvent"):FireServer(unpack(args))
+        wait(0.1)
+    end
+end
+
+function checkRebirth()
+    local plr = game.Players.LocalPlayer
+    local rebirths = plr:WaitForChild("leaderstats"):WaitForChild("Rebirths") -- Assuming 'Rebirths' is stored under leaderstats
+
+    -- Loop to auto rebirth until the stopping point is reached
+    while _G.rebirthUntilReachAmount do
+        if rebirths.Value >= _G.rebirthStoppingPoint then
+            _G.rebirthUntilReachAmount = false
+            break
+        end
+        autoRebirth() -- Calls the rebirth function
+        wait(0.1) -- Adjust the wait time as needed
+    end
+end
+
+-- Rebirth Tab Controls
+RebirthTab:CreateToggle("Auto Rebirth", {
+    Callback = function(Value)
+        _G.autoRebirth = Value
+        if Value then
+            spawn(autoRebirth)
+        end
+    end
+})
+
+RebirthTab:CreateTextbox("Rebirth Stopping Point", {
+    Text = "Enter stopping point",
+    Callback = function(Value)
+        _G.rebirthStoppingPoint = tonumber(Value) or 0
+    end
+})
+
+RebirthTab:CreateToggle("Rebirth Until Reach Chosen Amount", {
+    Callback = function(Value)
+        _G.rebirthUntilReachAmount = Value
+        if Value then
+            spawn(checkRebirth) -- Start checking the rebirth count
+        end
+    end
+})
