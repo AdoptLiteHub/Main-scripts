@@ -3,7 +3,7 @@ local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.
 local InterfaceManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `Fluent {Library.Version}`,
+    Title = `Lite Hub Legends Of Speed`,
     SubTitle = "by Actual Master Oogway",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -310,7 +310,7 @@ Tabs.Farming:CreateDropdown("Select City", {
 })
 
 Tabs.Farming:CreateDropdown("Select Orb", {
-    Options = {"Red Orb", "Blue Orb", "Orange Orb", "Gem", "Yellow Orb"},
+    Options = {"Red Orb", "Blue Orb", "Orange Orb", "Gem", "Yellow Orb" "Ethereal Orb"},
     Callback = function(Value)
         _G.SelectOrb = Value
     end
